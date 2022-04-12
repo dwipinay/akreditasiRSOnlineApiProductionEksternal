@@ -1,0 +1,85 @@
+### Token Create
+POST http://127.0.0.1:3021/api/login
+Content-Type: application/json
+
+{
+    "userName": "kotakelektronik@gmail.com",
+    "password": "p5fuNGds"
+}
+
+### Pengajuan Survei
+POST http://127.0.0.1:3021/api/pengajuansurvei
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcl9uYW1lIjoia290YWtlbGVrdHJvbmlrQGdtYWlsLmNvbSIsImtvZGVfcnMiOm51bGwsImlhdCI6MTY0NTY4MzQ5OCwiZXhwIjoxNjQ1Njg0MDk4fQ.Vseb4E6kImxLhyAwj-3SW3M53dlfzShpcjwl-jIUSIE
+
+{
+    "kodeRS": "3174063",
+    "lembagaAkreditasiId": "kars",
+    "tanggalPengajuanSurvei": "2022-01-01"
+}
+
+### Bimbingan
+POST http://127.0.0.1:3021/api/bimbingan
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcl9uYW1lIjoia290YWtlbGVrdHJvbmlrQGdtYWlsLmNvbSIsImtvZGVfcnMiOm51bGwsImlhdCI6MTY0NTY4NTQzOCwiZXhwIjoxNjQ1Njg2MDM4fQ.ijiC7DZQztslnjJnSVSghMPS8eDGsfV0n3PCoEEApV8
+
+{
+    "pengajuanSurveiId": 4,
+    "lembagaPembimbingId": 2,
+    "tanggalMulai": "2022-01-01",
+    "tanggalSelesai": "2022-01-05",
+    "pembimbing": [
+        {
+            "nikPembimbing": "1234567890125456",
+            "namaPembimbing": "dwi p"
+        },
+        {
+            "nikPembimbing": "1234567895123455",
+            "namaPembimbing": "bibo"
+        }
+    ]
+}
+
+### Survei
+POST http://127.0.0.1:3021/api/survei
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcl9uYW1lIjoia290YWtlbGVrdHJvbmlrQGdtYWlsLmNvbSIsImtvZGVfcnMiOm51bGwsImlhdCI6MTY0NTY4NTQzOCwiZXhwIjoxNjQ1Njg2MDM4fQ.ijiC7DZQztslnjJnSVSghMPS8eDGsfV0n3PCoEEApV8
+
+{
+    "bimbinganId": 124,
+    "tanggalMulai": "2022-01-01",
+    "surveior": [
+        {
+            "nikSurveior": "1234567890123456",
+            "namaSurveior": "Dwi P"
+        },
+        {
+            "nikSurveior": "1234567890123455",
+            "namaSurveior": "Ina Y"
+        }
+    ]
+}
+
+### Rekomendasi
+POST http://127.0.0.1:3021/api/rekomendasi
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcl9uYW1lIjoia290YWtlbGVrdHJvbmlrQGdtYWlsLmNvbSIsImtvZGVfcnMiOm51bGwsImlhdCI6MTY0NTY4NTcwMiwiZXhwIjoxNjQ1Njg2MzAyfQ.F8J4x6UHn1wUjM5PnUyKlkh7jl-EUKlCZrkDcpvX2Ss
+
+{
+    "surveiId": 29,
+    "urlRekomendasiSurvei": "https:/www.",
+    "tanggalSuratPengajuanSertifikat": "2022-01-01"
+}
+
+### Sertifikasi
+POST http://127.0.0.1:3021/api/sertifikasi
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcl9uYW1lIjoia290YWtlbGVrdHJvbmlrQGdtYWlsLmNvbSIsImtvZGVfcnMiOm51bGwsImlhdCI6MTY0NTY4NTcwMiwiZXhwIjoxNjQ1Njg2MzAyfQ.F8J4x6UHn1wUjM5PnUyKlkh7jl-EUKlCZrkDcpvX2Ss
+
+{
+    "rekomendasiId": 5,
+    "urlSertifikatAkreditasi": "https:/www.",
+    "tanggalTerbit": "2022-01-01",
+    "tanggalKadaluarsa": "2022-01-02",
+    "capaianAkreditasiId": 1
+}

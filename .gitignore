@@ -1,0 +1,11 @@
+# Ignore node_modules folder
+node_modules
+
+# Ignore package-lock.json
+package-lock.json
+
+# Ignore .env
+.env
+
+# Ignore Documentation
+apiDoc2022022421.json

@@ -1,0 +1,430 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "RS Online Akreditasi API",
+        "description": "Daftar API RS Online Akreditasi",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:3021",
+            "description": "staging server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "login",
+            "description": ""
+        },
+        {
+            "name": "pengajuansurvei",
+            "description": ""
+        },
+        {
+            "name": "bimbingan",
+            "description": ""
+        },
+        {
+            "name": "survei",
+            "description": ""
+        },
+        {
+            "name": "rekomendasi",
+            "description": ""
+        },
+        {
+            "name": "sertifikasi",
+            "description": ""
+        },
+        {
+            "name": "lembagaakreditasi",
+            "description": "reference"
+        },
+        {
+            "name": "lembagapembimbing",
+            "description": "reference"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post":{
+                "tags":[
+                    "login"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "userName": "1",
+                                    "password": "1"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/pengajuansurvei":{
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "pengajuansurvei"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "kodeRS": "3174063",
+                                    "lembagaAkreditasiId": "kars",
+                                    "tanggalPengajuanSurvei": "2022-01-01"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            },
+            "get":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "pengajuansurvei"
+                ],
+                "summary": "",
+                "description":"Read",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in": "query",
+                        "name": "kodeRS",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": ""
+                        },
+                        "description": ""
+                    }
+                ],
+                "responses":{
+                    "200": {
+                        "description": "data found"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "403": {
+                        "description": "forbidden"
+                    }
+                }
+            }
+        },
+        "/api/survei":{
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "survei"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "pengajuanSurveiId": 124,
+                                    "tanggalMulai": "2022-01-01",
+                                    "surveior": [
+                                        {
+                                            "nikSurveior": "1234567890123456",
+                                            "namaSurveior": "Dwi P"
+                                        },
+                                        {
+                                            "nikSurveior": "1234567890123455",
+                                            "namaSurveior": "Ina Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/rekomendasi":{
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "rekomendasi"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "surveiId": 29,
+                                    "urlRekomendasiSurvei": "https:/www.",
+                                    "tanggalSuratPengajuanSertifikat": "2022-01-01"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/sertifikasi":{
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "sertifikasi"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "rekomendasiId": 5,
+                                    "urlSertifikatAkreditasi": "https:/www.",
+                                    "tanggalTerbit": "2022-01-01",
+                                    "tanggalKadaluarsa": "2022-01-02",
+                                    "capaianAkreditasiId": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/bimbingan":{
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "bimbingan"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "pengajuanSurveiId": 4,
+                                    "lembagaPembimbingId": 2,
+                                    "tanggalMulai": "2022-01-01",
+                                    "tanggalSelesai": "2022-01-05",
+                                    "pembimbing": [
+                                        {
+                                            "nikPembimbing": "1234567890125456",
+                                            "namaPembimbing": "dwi p"
+                                        },
+                                        {
+                                            "nikPembimbing": "1234567895123455",
+                                            "namaPembimbing": "bibo"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/lembagaakreditasi":{
+            "get":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "lembagaakreditasi"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/lembagapembimbing":{
+            "get":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags":[
+                    "lembagapembimbing"
+                ],
+                "summary": "",
+                "description":"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses":{
+                    "201": {
+                        "description": "created"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {        
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
