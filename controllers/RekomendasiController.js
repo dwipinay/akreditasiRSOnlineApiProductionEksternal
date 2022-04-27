@@ -76,6 +76,88 @@ class RekomendasiController {
             })
         })
     }
+
+    update(req, res) {
+        const schema = Joi.object({
+            surveiId: Joi.number().required(),
+            urlRekomendasiSurvei: Joi.string().required(), 
+            tanggalSuratPengajuanSertifikat: Joi.string().required()
+        })
+
+        const { error, value } =  schema.validate(req.body)
+        if (error) {
+            res.status(404).send({
+                status: false,
+                message: error.details[0].message
+            })
+            return
+        }
+
+        const data = {
+            surveiId: req.body.surveiId,
+            urlRekomendasiSurvei: req.body.urlRekomendasiSurvei,
+            tanggalSuratPengajuanSertifikat: req.body.tanggalSuratPengajuanSertifikat,
+            userId: req.user.id
+        }
+
+        const rekomendasiObject = new rekomendasi()
+        rekomendasiObject.updateData(data, req.params.id, (err, result) => {
+            if (err) {
+                res.status(422).send({
+                    status: false,
+                    message: {
+                        code: err.code,
+                        errno: err.errno
+                    }
+                })
+                return
+            }
+            if (result == 'row not matched') {
+                res.status(404).send({
+                    status: false,
+                    message: 'data not found'
+                })
+                return
+            }
+            res.status(200).send({
+                status: true,
+                message: "data updated successfully",
+                data: result
+            })
+        })
+    }
+
+    delete(req, res) {
+        const data = {
+            userId: req.user.id
+        }
+
+        const rekomendasiObject = new rekomendasi()
+        rekomendasiObject.deleteData(data, req.params.id, (err, result) => {
+            if (err) {
+                res.status(422).send({
+                    status: false,
+                    message: {
+                        code: err.code,
+                        errno: err.errno
+                    }
+                })
+                return
+            }
+            if (result == 'row not matched') {
+                res.status(404).send({
+                    status: false,
+                    message: 'data not found'
+                })
+                return
+            }
+            res.status(200).send({
+                status: true,
+                message: "data deleted successfully",
+                data: result
+            })
+        })
+    }
 }
 
 module.exports = RekomendasiController

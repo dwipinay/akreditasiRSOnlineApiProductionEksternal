@@ -12,6 +12,8 @@ const sertifikasiController = require('../controllers/SertifikasiController')
 const lembagaAkreditasiController = require('../controllers/LembagaAkreditasiController')
 const lembagaPembimbingController = require('../controllers/LembagaPembimbingController')
 const CapaianAkreditasiController = require('../controllers/CapaianAkreditasiController')
+const inmController = require('../controllers/INMController')
+const ikpController = require('../controllers/IKPController')
 
 const userTokenObject = new userToken()
 const userCredentialControllerObject = new userCredentialController()
@@ -24,6 +26,8 @@ const sertifikasiControllerObject = new sertifikasiController()
 const lembagaAkreditasiControllerObject = new lembagaAkreditasiController()
 const lembagaPembimbingControllerObject = new lembagaPembimbingController()
 const capaianAkreditasiControllerObject = new CapaianAkreditasiController()
+const ikpControllerObject = new ikpController()
+const inmControllerObject = new inmController()
 
 router.post('/api/login', 
     userIPControllerObject.authenticateIP,
@@ -40,6 +44,16 @@ router.get('/api/pengajuansurvei',
     userTokenObject.authenticateToken,
     pengajuaanSurveiControllerObject.index
 )
+router.patch('/api/pengajuansurvei/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    pengajuaanSurveiControllerObject.update
+)
+router.delete('/api/pengajuansurvei/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    pengajuaanSurveiControllerObject.delete
+)
 
 // Bimbingan
 router.post('/api/bimbingan',
@@ -51,6 +65,16 @@ router.get('/api/bimbingan',
     userIPControllerObject.authenticateIP,
     userTokenObject.authenticateToken,
     bimbinganControllerObject.index
+)
+router.patch('/api/bimbingan/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    bimbinganControllerObject.update
+)
+router.delete('/api/bimbingan/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    bimbinganControllerObject.delete
 )
 
 // Survei
@@ -64,6 +88,16 @@ router.get('/api/survei',
     userTokenObject.authenticateToken,
     surveiControllerObject.index
 )
+router.patch('/api/survei/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    surveiControllerObject.update
+)
+router.delete('/api/survei/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    surveiControllerObject.delete
+)
 
 // Rekomendasi
 router.post('/api/rekomendasi',
@@ -76,6 +110,16 @@ router.get('/api/rekomendasi',
     userTokenObject.authenticateToken,
     rekomendasiControllerObject.index
 )
+router.patch('/api/rekomendasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    rekomendasiControllerObject.update
+)
+router.delete('/api/rekomendasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    rekomendasiControllerObject.delete
+)
 
 // Sertifikasi
 router.post('/api/sertifikasi',
@@ -83,11 +127,32 @@ router.post('/api/sertifikasi',
     userTokenObject.authenticateToken,
     sertifikasiControllerObject.store
 )
-
 router.get('/api/sertifikasi',
     userIPControllerObject.authenticateIP,
     userTokenObject.authenticateToken,
     sertifikasiControllerObject.index
+)
+router.patch('/api/sertifikasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.update
+)
+router.delete('/api/sertifikasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.delete
+)
+
+router.get('/api/inm',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    inmControllerObject.index
+)
+
+router.get('/api/ikp',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    ikpControllerObject.index
 )
 
 router.get('/api/lembagaakreditasi',

@@ -1,6 +1,7 @@
 const survei = require('../models/Survei')
 const pagination = require('../configs/Pagination')
 const Joi = require('joi')
+const Survei = require('../models/Survei')
 
 class SurveiController {
     index(req, res) {
@@ -82,6 +83,96 @@ class SurveiController {
                 status: true,
                 message: "data inserted successfully",
                 data: results
+            })
+        })
+    }
+
+    update(req, res) {
+        const schema = Joi.object({
+            pengajuanSurveiId: Joi.number().required(),
+            tanggalMulai: Joi.string().required(),
+            surveior:
+                Joi.object().keys({
+                    id: Joi.number().required(),
+                    nikSurveior: Joi.string()
+                        .min(16)
+                        .max(16)
+                        .required(),
+                    namaSurveior: Joi.string().required()
+                }).required().allow(null)
+        })
+
+        const { error, value } =  schema.validate(req.body)
+        if (error) {
+            res.status(404).send({
+                status: false,
+                message: error.details[0].message
+            })
+            return
+        }
+        
+        const data = {
+            pengajuanSurveiId: req.body.pengajuanSurveiId,
+            tanggalMulai: req.body.tanggalMulai,
+            userId: req.user.id,
+            surveior: req.body.surveior
+        }
+
+        const surveiObject = new Survei()
+        surveiObject.updateData(data, req.params.id, (err, result) => {
+            if (err) {
+                res.status(422).send({
+                    status: false,
+                    message: {
+                        code: err.code,
+                        errno: err.errno
+                    }
+                })
+                return
+            }
+            if (result == 'row not matched') {
+                res.status(404).send({
+                    status: false,
+                    message: 'data not found'
+                })
+                return
+            }
+            res.status(200).send({
+                status: true,
+                message: "data updated successfully",
+                data: result
+            })
+        })
+    }
+
+    delete(req, res) {
+        const data = {
+            userId: req.user.id
+        }
+
+        const surveiObject = new survei()
+        surveiObject.deleteData(data, req.params.id, (err, result) => {
+            if (err) {
+                res.status(422).send({
+                    status: false,
+                    message: {
+                        code: err.code,
+                        errno: err.errno
+                    }
+                })
+                return
+            }
+            if (result == 'row not matched') {
+                res.status(404).send({
+                    status: false,
+                    message: 'data not found'
+                })
+                return
+            }
+            res.status(200).send({
+                status: true,
+                message: "data deleted successfully",
+                data: result
             })
         })
     }

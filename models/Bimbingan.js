@@ -6,9 +6,11 @@ class Bimbingan {
     getData(req, callback) {
         const sqlSelect = 'SELECT ' +
             'db_akreditasi.bimbingan.id, ' +
+            'db_akreditasi.bimbingan.kode_rs, ' +
             'db_akreditasi.bimbingan.lembaga_pembimbing_id, ' +
             'db_akreditasi.bimbingan.tanggal_mulai, ' +
             'db_akreditasi.bimbingan.tanggal_selesai, ' +
+            'db_akreditasi.bimbingan_detail.id as id_pembimbing, ' +
             'db_akreditasi.bimbingan_detail.nik_pembimbing, ' +
             'db_akreditasi.bimbingan_detail.nama_pembimbing '
 
@@ -16,9 +18,9 @@ class Bimbingan {
             'db_akreditasi.bimbingan ' +
             'INNER JOIN db_akreditasi.bimbingan_detail ON db_akreditasi.bimbingan_detail.bimbingan_id = db_akreditasi.bimbingan.id '
 
-        const sqlWhere = 'WHERE '
+        const sqlWhere = 'WHERE db_akreditasi.bimbingan.user_id=? AND '
 
-        const sqlFilterValue = []
+        const sqlFilterValue = [req.user.id]
         const filter = []
 
         const kodeRS = req.query.kodeRS || null
@@ -50,6 +52,7 @@ class Bimbingan {
                         res.forEach(element2 => {
                             if (element['id'] == element2['id']) {
                                 pembimbing.push({
+                                    id: element2['id_pembimbing'],
                                     nikPembimbing: element2['nik_pembimbing'],
                                     namaPembimbing: element2['nama_pembimbing']
                                 })
@@ -58,6 +61,7 @@ class Bimbingan {
 
                         results.push({
                             id: element['id'],
+                            kodeRS: element['kode_rs'],
                             lembagaPembimbingId: element['lembaga_pembimbing_id'],
                             tanggalMulai: dateFormat(element['tanggal_mulai'], 'yyyy-dd-mm'),
                             tanggalSelesai: dateFormat(element['tanggal_selesai'], 'yyyy-dd-mm'),
@@ -82,8 +86,18 @@ class Bimbingan {
         this.insertScript (data)
         .then(
             (res) => {
+                let iteration = 0
+                let dataDetail = []
+                for(let i = res[1].insertId; i < res[1].insertId + res[1].affectedRows; i++) {
+                    dataDetail.push({
+                        id: i,
+                        nikPembimbing: data.pembimbing[iteration].nikPembimbing
+                    })
+                    iteration += 1
+                }
                 let dataInserted = {
-                    id: res.insertId
+                    id: res[0].insertId,
+                    pembimbing: dataDetail
                 }
                 callback(null, dataInserted)
             }, (error) => {
@@ -121,7 +135,7 @@ class Bimbingan {
                         connection.query(
                             sqlInsertHeader, 
                             [recordHeader],
-                            function (err, uResults) {
+                            function (err, resultHeader) {
                                 if (err) {
                                     //Query Error (Rollback and release connection)
                                     connection.rollback(function () {
@@ -133,7 +147,7 @@ class Bimbingan {
                                     let recordDetails = []
                                     for (let i in data.pembimbing) {
                                         recordDetails.push([
-                                            uResults.insertId,
+                                            resultHeader.insertId,
                                             data.pembimbing[i].nikPembimbing,
                                             data.pembimbing[i].namaPembimbing
                                         ])
@@ -146,7 +160,7 @@ class Bimbingan {
                                     connection.query(
                                         sqlInsertDetail,
                                         [recordDetails],
-                                        function(err, results) {
+                                        function(err, resultDetail) {
                                             if (err) {
                                                 connection.rollback(function () {
                                                     connection.release()
@@ -161,7 +175,219 @@ class Bimbingan {
                                                         return reject(err)
                                                     } else {
                                                         connection.release()
-                                                        return resolve(uResults);
+                                                        const results = [
+                                                            resultHeader,
+                                                            resultDetail
+                                                        ]
+                                                        return resolve(results);
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
+                })
+            })
+        })
+    }
+
+    updateData(data, id, callback) {
+        this.updateScript(data, id)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceUpdated = {
+                    id: id
+                } 
+                callback(null, resourceUpdated);
+            }
+        )
+        .catch((error) => {
+            callback(error, null)
+        })
+    }
+
+    updateScript(data, id) {
+        return new Promise((resolve, reject) => {
+            pool.getConnection(function (err, connection) {
+                if (err) {
+                    return reject(err);
+                }
+                connection.beginTransaction(function (err) {
+                    if (err) {
+                        //Transaction Error (Rollback and release connection)
+                        connection.rollback(function () {
+                            connection.release();
+                        });
+                        return reject(err);
+                    } else {
+                        const recordHeader = [
+                            data.kodeRS,
+                            data.lembagaPembimbingId,
+                            data.tanggalMulai,
+                            data.tanggalSelesai,
+                            data.userId,
+                            id
+                        ]
+                        const sqlUpdateHeader = 'Update db_akreditasi.bimbingan SET ' +
+                        'kode_rs=?,' +
+                        'lembaga_pembimbing_id=?,' +
+                        'tanggal_mulai=?, ' +
+                        'tanggal_selesai=? ' +
+                        'Where user_id=? And id=?'
+                        connection.query(
+                            sqlUpdateHeader, 
+                            recordHeader,
+                            function (err, resultHeader) {
+                                if (err) {
+                                    //Query Error (Rollback and release connection)
+                                    connection.rollback(function () {
+                                        connection.release();
+                                    });
+                                    return reject(err);
+                                } else {
+                                    if (data.pembimbing == null) {
+                                        connection.commit(function (err) {
+                                            if (err) {
+                                                connection.rollback(function () {
+                                                    connection.release()
+                                                })
+                                                return reject(err)
+                                            } else {
+                                                connection.release()
+                                                return resolve(resultHeader);
+                                            }
+                                        })
+                                        return
+                                    }
+                                    const recordDetail = [
+                                        data.pembimbing.nikPembimbing,
+                                        data.pembimbing.namaPembimbing,
+                                        data.userId,
+                                        data.pembimbing.id,
+                                        id
+                                    ]
+                                    console.log(recordDetail)
+                                    const sqlUpdateDetail = 'Update db_akreditasi.bimbingan_detail SET ' +
+                                    'nik_pembimbing=?,' +
+                                    'nama_pembimbing=? ' +
+                                    'Where user_id=? And id=? And bimbingan_id=?'
+                                    connection.query(
+                                        sqlUpdateDetail,
+                                        recordDetail,
+                                        function (err, resultDetail) {
+                                            if (err) {
+                                                //Query Error (Rollback and release connection)
+                                                connection.rollback(function () {
+                                                    connection.release();
+                                                });
+                                                return reject(err);
+                                            } else {
+                                                connection.commit(function (err) {
+                                                    if (err) {
+                                                        connection.rollback(function () {
+                                                            connection.release()
+                                                        })
+                                                        return reject(err)
+                                                    } else {
+                                                        connection.release()
+                                                        return resolve(resultHeader);
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                    }
+                })
+            })
+        })
+    }
+
+    deleteData(data, id, callback) {
+        this.deleteScript(data, id)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceDeleted = {
+                    id: id
+                } 
+                callback(null, resourceDeleted);
+            }
+        )
+        .catch((error) => {
+            callback(error, null)
+        })
+    }
+
+    deleteScript(data, id) {
+        return new Promise((resolve, reject) => {
+            pool.getConnection(function (err, connection) {
+                if (err) {
+                    return reject(err);
+                }
+                connection.beginTransaction(function (err) {
+                    if (err) {
+                        //Transaction Error (Rollback and release connection)
+                        connection.rollback(function () {
+                            connection.release();
+                        });
+                        return reject(err);
+                    } else {
+                        const recordDetail = [
+                            data.userId,
+                            id
+                        ]
+                        const sqlDeleteDetail = 'Delete From db_akreditasi.bimbingan_detail ' +
+                        'Where user_id=? And bimbingan_id=?'
+                        connection.query(
+                            sqlDeleteDetail, 
+                            recordDetail,
+                            function (err, resultHeader) {
+                                if (err) {
+                                    //Query Error (Rollback and release connection)
+                                    connection.rollback(function () {
+                                        connection.release();
+                                    });
+                                    return reject(err);
+                                } else {
+                                    const recordHeader = [
+                                        data.userId,
+                                        id
+                                    ]
+                                    const sqlDeleteHeader = 'Delete From db_akreditasi.bimbingan ' +
+                                    'Where user_id=? And id=?'
+                                    connection.query(
+                                        sqlDeleteHeader,
+                                        recordHeader,
+                                        function (err, resultHeader) {
+                                            if (err) {
+                                                //Query Error (Rollback and release connection)
+                                                connection.rollback(function () {
+                                                    connection.release();
+                                                });
+                                                return reject(err);
+                                            } else {
+                                                connection.commit(function (err) {
+                                                    if (err) {
+                                                        connection.rollback(function () {
+                                                            connection.release()
+                                                        })
+                                                        return reject(err)
+                                                    } else {
+                                                        connection.release()
+                                                        return resolve(resultHeader);
                                                     }
                                                 })
                                             }

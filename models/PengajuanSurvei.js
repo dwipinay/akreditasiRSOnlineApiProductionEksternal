@@ -13,9 +13,9 @@ class PengajuaanSurvei {
         const sqlFrom = 'FROM ' +
             'db_akreditasi.pengajuan_survei '
 
-        const sqlWhere = 'WHERE '
+        const sqlWhere = 'WHERE db_akreditasi.pengajuan_survei.user_id=? AND '
 
-        const sqlFilterValue = []
+        const sqlFilterValue = [req.user.id]
         const filter = []
 
         const kodeRS = req.query.kodeRS || null
@@ -86,6 +86,68 @@ class PengajuaanSurvei {
         .catch((error) => {
             callback(error, null)
         })  
+    }
+
+    updateData(data, id, callback) {
+        const record = [
+            data.kodeRS,
+            data.lembagaAkreditasiId,
+            data.tanggalPengajuanSurvei,
+            data.userId,
+            id
+        ]
+        
+        const sqlUpdate = 'Update db_akreditasi.pengajuan_survei SET ' +
+        'kode_rs=?,' +
+        'lembaga_akreditasi_id=?,' +
+        'tanggal_pengajuan_survei=? ' +
+        'Where user_id=? And id=?'
+        const database = new Database(pool)
+        database.query(sqlUpdate, record)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceUpdated = {
+                    id: id
+                } 
+                callback(null, resourceUpdated);
+            },(error) => {
+                throw error
+            }
+        ).catch((error) => {
+            callback(error, null)
+        }) 
+    }
+
+    deleteData(data, id, callback) {
+        const record = [
+            data.userId,
+            id
+        ]
+
+        const sqlDelete = 'Delete From db_akreditasi.pengajuan_survei ' +
+        'Where user_id=? And id=?'
+        const database = new Database(pool)
+        database.query(sqlDelete, record)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceDeleted = {
+                    id: id
+                } 
+                callback(null, resourceDeleted);
+            },(error) => {
+                throw error
+            }
+        ).catch((error) => {
+            callback(error, null)
+        })
     }
 }
 

@@ -18,9 +18,9 @@ class Sertifikasi {
             'INNER JOIN db_akreditasi.survei ON db_akreditasi.survei.id = db_akreditasi.rekomendasi.survei_id ' +
             'INNER JOIN db_akreditasi.pengajuan_survei ON db_akreditasi.pengajuan_survei.id = db_akreditasi.survei.pengajuan_survei_id '
 
-        const sqlWhere = 'WHERE '
+        const sqlWhere = 'WHERE db_akreditasi.sertifikasi.user_id=? AND '
 
-        const sqlFilterValue = []
+        const sqlFilterValue = [req.user.id]
         const filter = []
 
         const kodeRS = req.query.kodeRS || null
@@ -94,6 +94,72 @@ class Sertifikasi {
         .catch((error) => {
             callback(error, null)
         })  
+    }
+
+    updateData(data, id, callback) {
+        const record = [
+            data.rekomendasiId,
+            data.urlSertifikatAkreditasi,
+            data.tanggalTerbit,
+            data.tanggalKadaluarsa,
+            data.capaianAkreditasiId,
+            data.userId,
+            id
+        ]
+        
+        const sqlUpdate = 'Update db_akreditasi.sertifikasi SET ' +
+        'rekomendasi_id=?,' +
+        'url_sertifikat_akreditasi=?,' +
+        'tanggal_terbit=?,' +
+        'tanggal_kadaluarsa=?,' +
+        'capaian_akreditasi_id=? ' +
+        'Where user_id=? And id=?'
+        const database = new Database(pool)
+        database.query(sqlUpdate, record)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceUpdated = {
+                    id: id
+                } 
+                callback(null, resourceUpdated);
+            },(error) => {
+                throw error
+            }
+        ).catch((error) => {
+            callback(error, null)
+        }) 
+    }
+
+    deleteData(data, id, callback) {
+        const record = [
+            data.userId,
+            id
+        ]
+
+        const sqlDelete = 'Delete From db_akreditasi.sertifikasi ' +
+        'Where user_id=? And id=?'
+        const database = new Database(pool)
+        database.query(sqlDelete, record)
+        .then(
+            (res) => {
+                if (res.affectedRows === 0 && res.changedRows === 0) {
+                    callback(null, 'row not matched');
+                    return
+                }
+                let resourceDeleted = {
+                    id: id
+                } 
+                callback(null, resourceDeleted);
+            },(error) => {
+                throw error
+            }
+        ).catch((error) => {
+            callback(error, null)
+        })
     }
 }
 
