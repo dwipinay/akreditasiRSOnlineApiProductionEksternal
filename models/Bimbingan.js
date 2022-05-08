@@ -266,43 +266,48 @@ class Bimbingan {
                                         })
                                         return
                                     }
-                                    const recordDetail = [
-                                        data.pembimbing.nikPembimbing,
-                                        data.pembimbing.namaPembimbing,
-                                        data.userId,
-                                        data.pembimbing.id,
-                                        id
-                                    ]
-                                    console.log(recordDetail)
-                                    const sqlUpdateDetail = 'Update db_akreditasi.bimbingan_detail SET ' +
-                                    'nik_pembimbing=?,' +
-                                    'nama_pembimbing=? ' +
-                                    'Where user_id=? And id=? And bimbingan_id=?'
-                                    connection.query(
-                                        sqlUpdateDetail,
-                                        recordDetail,
-                                        function (err, resultDetail) {
+
+                                    let values = []
+                                    data.pembimbing.forEach(element => {
+                                        values.push([
+                                            element['nikPembimbing'],
+                                            element['namaPembimbing'],
+                                            data.userId,
+                                            element['id'],
+                                            id
+                                        ])
+                                    })
+
+                                    values.forEach((item, index) => {
+                                        connection.query('Update db_akreditasi.bimbingan_detail SET ' +
+                                        'nik_pembimbing=?,' +
+                                        'nama_pembimbing=? ' +
+                                        'Where user_id=? And id=? And bimbingan_id=?', item, function(err, result){
                                             if (err) {
+                                                console.log('error')
                                                 //Query Error (Rollback and release connection)
                                                 connection.rollback(function () {
                                                     connection.release();
                                                 });
                                                 return reject(err);
                                             } else {
-                                                connection.commit(function (err) {
-                                                    if (err) {
-                                                        connection.rollback(function () {
+                                                if (index == values.length - 1) {
+                                                    connection.commit(function (err) {
+                                                        if (err) {
+                                                            connection.rollback(function () {
+                                                                connection.release()
+                                                            })
+                                                            return reject(err)
+                                                        } else {
                                                             connection.release()
-                                                        })
-                                                        return reject(err)
-                                                    } else {
-                                                        connection.release()
-                                                        return resolve(resultHeader);
-                                                    }
-                                                })
+                                                            return resolve(resultHeader);
+                                                        }
+                                                    })
+                                                }
+                                                
                                             }
-                                        }
-                                    )
+                                        }) 
+                                    })
                                 }
                             }
                         )

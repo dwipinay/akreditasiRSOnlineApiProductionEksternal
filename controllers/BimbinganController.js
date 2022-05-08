@@ -96,15 +96,17 @@ class BimbinganController {
             lembagaPembimbingId: Joi.number().required(),
             tanggalMulai: Joi.string().required(),
             tanggalSelesai: Joi.string().required(),
-            pembimbing:
-                Joi.object().keys({
-                    id: Joi.number().required(),
-                    nikPembimbing: Joi.string()
-                        .min(16)
-                        .max(16)
-                        .required(),
-                    namaPembimbing: Joi.string().required()
-                }).required().allow(null)
+            pembimbing: Joi.array()
+                .items(
+                    Joi.object().keys({
+                        id: Joi.number().required(),
+                        nikPembimbing: Joi.string()
+                            .min(16)
+                            .max(16)
+                            .required(),
+                        namaPembimbing: Joi.string().required()
+                    }).required()
+                ).required().allow(null)
         })
 
         const { error, value } =  schema.validate(req.body)

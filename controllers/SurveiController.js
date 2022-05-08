@@ -91,15 +91,17 @@ class SurveiController {
         const schema = Joi.object({
             pengajuanSurveiId: Joi.number().required(),
             tanggalMulai: Joi.string().required(),
-            surveior:
-                Joi.object().keys({
-                    id: Joi.number().required(),
-                    nikSurveior: Joi.string()
-                        .min(16)
-                        .max(16)
-                        .required(),
-                    namaSurveior: Joi.string().required()
-                }).required().allow(null)
+            surveior: Joi.array()
+                .items(
+                    Joi.object().keys({
+                        id: Joi.number().required(),
+                        nikSurveior: Joi.string()
+                            .min(16)
+                            .max(16)
+                            .required(),
+                        namaSurveior: Joi.string().required()
+                    }).required()
+                ).required().allow(null)
         })
 
         const { error, value } =  schema.validate(req.body)

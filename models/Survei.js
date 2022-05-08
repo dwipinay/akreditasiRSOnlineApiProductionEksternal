@@ -259,42 +259,48 @@ class Survei {
                                         })
                                         return
                                     }
-                                    const recordDetail = [
-                                        data.surveior.nikSurveior,
-                                        data.surveior.namaSurveior,
-                                        data.userId,
-                                        data.surveior.id,
-                                        id
-                                    ]
-                                    const sqlUpdateDetail = 'Update db_akreditasi.survei_detail SET ' +
-                                    'nik_surveior=?,' +
-                                    'nama_surveior=? ' +
-                                    'Where user_id=? And id=? And survei_id=?'
-                                    connection.query(
-                                        sqlUpdateDetail,
-                                        recordDetail,
-                                        function (err, resultDetail) {
+
+                                    let values = []
+                                    data.surveior.forEach(element => {
+                                        values.push([
+                                            element['nikSurveior'],
+                                            element['namaSurveior'],
+                                            data.userId,
+                                            element['id'],
+                                            id
+                                        ])
+                                    })
+
+                                    values.forEach((item, index) => {
+                                        connection.query('Update db_akreditasi.survei_detail SET ' +
+                                        'nik_surveior=?,' +
+                                        'nama_surveior=? ' +
+                                        'Where user_id=? And id=? And survei_id=?', item, function(err, result){
                                             if (err) {
+                                                console.log('error')
                                                 //Query Error (Rollback and release connection)
                                                 connection.rollback(function () {
                                                     connection.release();
                                                 });
                                                 return reject(err);
                                             } else {
-                                                connection.commit(function (err) {
-                                                    if (err) {
-                                                        connection.rollback(function () {
+                                                if (index == values.length - 1) {
+                                                    connection.commit(function (err) {
+                                                        if (err) {
+                                                            connection.rollback(function () {
+                                                                connection.release()
+                                                            })
+                                                            return reject(err)
+                                                        } else {
                                                             connection.release()
-                                                        })
-                                                        return reject(err)
-                                                    } else {
-                                                        connection.release()
-                                                        return resolve(resultHeader);
-                                                    }
-                                                })
+                                                            return resolve(resultHeader);
+                                                        }
+                                                    })
+                                                }
+                                                
                                             }
-                                        }
-                                    )
+                                        })
+                                    })
                                 }
                             }
                         )
