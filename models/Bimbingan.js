@@ -149,12 +149,13 @@ class Bimbingan {
                                         recordDetails.push([
                                             resultHeader.insertId,
                                             data.pembimbing[i].nikPembimbing,
-                                            data.pembimbing[i].namaPembimbing
+                                            data.pembimbing[i].namaPembimbing,
+                                            data.userId
                                         ])
                                     }
                                     
                                     const sqlInsertDetail = 'INSERT INTO db_akreditasi.bimbingan_detail ' +
-                                    '(bimbingan_id,nik_pembimbing,nama_pembimbing) ' +
+                                    '(bimbingan_id,nik_pembimbing,nama_pembimbing,user_id) ' +
                                     'VALUES ? '
 
                                     connection.query(
