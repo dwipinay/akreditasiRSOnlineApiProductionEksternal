@@ -8,7 +8,11 @@ class Rekomendasi {
             'db_akreditasi.rekomendasi.id, ' +
             'db_akreditasi.rekomendasi.survei_id, ' +
             'db_akreditasi.rekomendasi.url_rekomendasi_survei, ' +
-            'db_akreditasi.rekomendasi.tanggal_surat_pengajuan_sertifikat '
+            'db_akreditasi.rekomendasi.tanggal_surat_pengajuan_sertifikat, ' +
+            'db_akreditasi.rekomendasi.tanggal_terbit_sertifikat, ' +
+            'db_akreditasi.rekomendasi.tanggal_kadaluarsa_sertifikat, ' +
+            'db_akreditasi.rekomendasi.capaian_akreditasi_id, ' +
+            'db_akreditasi.rekomendasi.no_sertifikat '
 
         const sqlFrom = 'FROM ' +
         'db_akreditasi.rekomendasi ' +
@@ -46,7 +50,11 @@ class Rekomendasi {
                         id: element['id'],
                         surveiId: element['survei_id'],
                         urlRekomendasiSurvei: element['url_rekomendasi_survei'],
-                        tanggalSuratPengajuanSertifikat: dateFormat(element['tanggal_surat_pengajuan_sertifikat'], 'yyyy-mm-dd')
+                        tanggalSuratPengajuanSertifikat: dateFormat(element['tanggal_surat_pengajuan_sertifikat'], 'yyyy-mm-dd'),
+                        tanggalTerbitSertifikat: dateFormat(element['tanggal_terbit_sertifikat'],'yyyy-mm-dd'),
+                        tanggalKadaluarsaSertifikat: dateFormat(element['tanggal_kadaluarsa_sertifikat'],'yyyy-mm-dd'),
+                        capaianAkreditasiId: element['capaian_akreditasi_id'],
+                        noSertifikat: element['no_sertifikat']
                     })
                 })
                 callback(null, results)
@@ -64,11 +72,16 @@ class Rekomendasi {
             data.surveiId,
             data.urlRekomendasiSurvei,
             data.tanggalSuratPengajuanSertifikat,
+            data.tanggalTerbitSertifikat,
+            data.tanggalKadaluarsaSertifikat,
+            data.capaianAkreditasiId,
+            data.noSertifikat,
             data.userId
         ]
 
         const sqlInsert = 'INSERT INTO db_akreditasi.rekomendasi ' +
-            '(survei_id,url_rekomendasi_survei,tanggal_surat_pengajuan_sertifikat,user_id) ' +
+            '(survei_id,url_rekomendasi_survei,tanggal_surat_pengajuan_sertifikat,tanggal_terbit_sertifikat,' +
+                'tanggal_kadaluarsa_sertifikat,capaian_akreditasi_id,no_sertifikat,user_id) ' +
             'VALUES ( ? )'
 
         const database = new Database(pool)
@@ -93,14 +106,22 @@ class Rekomendasi {
             data.surveiId,
             data.urlRekomendasiSurvei,
             data.tanggalSuratPengajuanSertifikat,
+            data.tanggalTerbitSertifikat,
+            data.tanggalKadaluarsaSertifikat,
+            data.capaianAkreditasiId,
+            data.noSertifikat,
             data.userId,
             id
         ]
-        
+
         const sqlUpdate = 'Update db_akreditasi.rekomendasi SET ' +
         'survei_id=?,' +
         'url_rekomendasi_survei=?,' +
-        'tanggal_surat_pengajuan_sertifikat=? ' +
+        'tanggal_surat_pengajuan_sertifikat=?, ' +
+        'tanggal_terbit_sertifikat=?, ' +
+        'tanggal_kadaluarsa_sertifikat=?, ' +
+        'capaian_akreditasi_id=?, ' +
+        'no_sertifikat=? ' + 
         'Where user_id=? And id=?'
         const database = new Database(pool)
         database.query(sqlUpdate, record)

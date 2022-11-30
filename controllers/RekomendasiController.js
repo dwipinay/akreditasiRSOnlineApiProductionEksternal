@@ -41,7 +41,11 @@ class RekomendasiController {
         const schema = Joi.object({
             surveiId: Joi.number().required(),
             urlRekomendasiSurvei: Joi.string().required(), 
-            tanggalSuratPengajuanSertifikat: Joi.string().required()
+            tanggalSuratPengajuanSertifikat: Joi.string().required(),
+            tanggalTerbitSertifikat: Joi.string().required(),
+            tanggalKadaluarsaSertifikat: Joi.string().required(),
+            noSertifikat: Joi.string().required(),
+            capaianAkreditasiId: Joi.number().required()
         })
 
         const { error, value } =  schema.validate(req.body)
@@ -57,6 +61,10 @@ class RekomendasiController {
             surveiId: req.body.surveiId,
             urlRekomendasiSurvei: req.body.urlRekomendasiSurvei,
             tanggalSuratPengajuanSertifikat: req.body.tanggalSuratPengajuanSertifikat,
+            tanggalTerbitSertifikat: req.body.tanggalTerbitSertifikat,
+            tanggalKadaluarsaSertifikat: req.body.tanggalTerbitSertifikat,
+            capaianAkreditasiId: req.body.capaianAkreditasiId,
+            noSertifikat: req.body.noSertifikat,
             userId: req.user.id
         }
 
@@ -81,7 +89,11 @@ class RekomendasiController {
         const schema = Joi.object({
             surveiId: Joi.number().required(),
             urlRekomendasiSurvei: Joi.string().required(), 
-            tanggalSuratPengajuanSertifikat: Joi.string().required()
+            tanggalSuratPengajuanSertifikat: Joi.string().required(),
+            tanggalTerbitSertifikat: Joi.string().required(),
+            tanggalKadaluarsaSertifikat: Joi.string().required(),
+            capaianAkreditasiId: Joi.number().required(),
+            noSertifikat: Joi.string().required()
         })
 
         const { error, value } =  schema.validate(req.body)
@@ -97,6 +109,10 @@ class RekomendasiController {
             surveiId: req.body.surveiId,
             urlRekomendasiSurvei: req.body.urlRekomendasiSurvei,
             tanggalSuratPengajuanSertifikat: req.body.tanggalSuratPengajuanSertifikat,
+            tanggalTerbitSertifikat: req.body.tanggalTerbitSertifikat,
+            tanggalKadaluarsaSertifikat: req.body.tanggalKadaluarsaSertifikat,
+            capaianAkreditasiId: req.body.capaianAkreditasiId,
+            noSertifikat: req.body.noSertifikat,
             userId: req.user.id
         }
 
