@@ -62,7 +62,7 @@ class RekomendasiController {
             urlRekomendasiSurvei: req.body.urlRekomendasiSurvei,
             tanggalSuratPengajuanSertifikat: req.body.tanggalSuratPengajuanSertifikat,
             tanggalTerbitSertifikat: req.body.tanggalTerbitSertifikat,
-            tanggalKadaluarsaSertifikat: req.body.tanggalTerbitSertifikat,
+            tanggalKadaluarsaSertifikat: req.body.tanggalKadaluarsaSertifikat,
             capaianAkreditasiId: req.body.capaianAkreditasiId,
             noSertifikat: req.body.noSertifikat,
             userId: req.user.id
