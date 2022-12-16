@@ -122,26 +122,26 @@ router.delete('/api/rekomendasi/:id',
 )
 
 // Sertifikasi
-// router.post('/api/sertifikasi',
-//     userIPControllerObject.authenticateIP,
-//     userTokenObject.authenticateToken,
-//     sertifikasiControllerObject.store
-// )
-// router.get('/api/sertifikasi',
-//     userIPControllerObject.authenticateIP,
-//     userTokenObject.authenticateToken,
-//     sertifikasiControllerObject.index
-// )
-// router.patch('/api/sertifikasi/:id',
-//     userIPControllerObject.authenticateIP,
-//     userTokenObject.authenticateToken,
-//     sertifikasiControllerObject.update
-// )
-// router.delete('/api/sertifikasi/:id',
-//     userIPControllerObject.authenticateIP,
-//     userTokenObject.authenticateToken,
-//     sertifikasiControllerObject.delete
-// )
+router.post('/api/sertifikasi',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.store
+)
+router.get('/api/sertifikasi',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.index
+)
+router.patch('/api/sertifikasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.update
+)
+router.delete('/api/sertifikasi/:id',
+    userIPControllerObject.authenticateIP,
+    userTokenObject.authenticateToken,
+    sertifikasiControllerObject.delete
+)
 
 router.get('/api/inm',
     userIPControllerObject.authenticateIP,
