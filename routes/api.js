@@ -125,8 +125,6 @@ router.delete('/api/rekomendasi/:id',
     rekomendasiControllerObject.delete
 )
 
-const BabControllerObject = new BabController()
-
 router.post('/api/login', 
     userIPControllerObject.authenticateIP,
     userCredentialControllerObject.authenticateCredentialNonFasyankes)
