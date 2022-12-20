@@ -47,7 +47,8 @@ class PenilaianBab {
                     results.push({
                         id: element['id'],
                         babId: element['bab_id'],
-                        nilai: element['nilai']
+                        nilai: element['nilai'],
+                        statusPenilaian: element['status_penilaian']
                     })
                 })
                 callback(null, results)
@@ -87,7 +88,7 @@ class PenilaianBab {
                         id: i,
                         babId: data.penilaianBab[iteration].babId,
                         nilai: data.penilaianBab[iteration].nilai,
-                        nilai: data.penilaianBab[iteration].statusPenilaian,
+                        statusPenilaian: data.penilaianBab[iteration].statusPenilaian,
                     })
                     iteration += 1
                 }
