@@ -8,7 +8,8 @@ class PenilaianBab {
         const sqlSelect = 'SELECT ' +
             'db_akreditasi.penilaian_bab.id, ' +
             'db_akreditasi.penilaian_bab.bab_id, ' +
-            'db_akreditasi.penilaian_bab.nilai ' 
+            'db_akreditasi.penilaian_bab.nilai, ' +
+            'db_akreditasi.penilaian_bab.status_penilaian ' 
 
         const sqlFrom = 'FROM ' +
         'db_akreditasi.penilaian_bab ' +
@@ -66,12 +67,13 @@ class PenilaianBab {
                 data.rekomendasiId,
                 data.penilaianBab[i].babId,
                 data.penilaianBab[i].nilai,
+                data.penilaianBab[i].statusPenilaian,
                 data.userId
             ])
         }
         
         const sqlInsert = 'INSERT INTO db_akreditasi.penilaian_bab ' +
-            '(rekomendasi_id,bab_id,nilai,user_id) ' +
+            '(rekomendasi_id,bab_id,nilai,status_penilaian,user_id) ' +
             'VALUES ? '
         
         const database = new Database(pool)
@@ -85,6 +87,7 @@ class PenilaianBab {
                         id: i,
                         babId: data.penilaianBab[iteration].babId,
                         nilai: data.penilaianBab[iteration].nilai,
+                        nilai: data.penilaianBab[iteration].statusPenilaian,
                     })
                     iteration += 1
                 }
@@ -112,7 +115,8 @@ class PenilaianBab {
 
         const sqlUpdate = 'Update db_akreditasi.penilaian_bab SET ' +
         'bab_id=?,' +
-        'nilai=? ' +
+        'nilai=?, ' +
+        'status_Penilaian=? ' +
         'Where user_id=? And id=?'
         const database = new Database(pool)
         database.query(sqlUpdate, record)

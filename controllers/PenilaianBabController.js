@@ -44,7 +44,8 @@ class PenilaianBabController {
                 .items(
                     Joi.object().keys({
                         babId: Joi.number().required(),
-                        nilai: Joi.number().precision(2).required()
+                        nilai: Joi.number().precision(2).required().allow(null),
+                        statusPenilaian: Joi.number().required()
                     }).required()
                 ).required()
         })
@@ -84,7 +85,8 @@ class PenilaianBabController {
     update(req, res) {
         const schema = Joi.object({
             babId: Joi.number().required(),
-            nilai: Joi.number().precision(2).required()
+            nilai: Joi.number().precision(2).required().allow(null),
+            statusPenilaian: Joi.number().required()
         })
 
         const { error, value } =  schema.validate(req.body)
@@ -99,6 +101,7 @@ class PenilaianBabController {
         const data = {
             babId: req.body.babId,
             nilai: req.body.nilai,
+            statusPenilaian: req.body.statusPenilaian,
             userId: req.user.id
         }
 
